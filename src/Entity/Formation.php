@@ -11,12 +11,11 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: FormationRepository::class)]
 class Formation
 {
-
     /**
-     * Début de chemin vers les images
+     * Début du chemin vers les images YouTube.
      */
-    private const cheminImage = "https://i.ytimg.com/vi/";
-        
+    private const CHEMIN_IMAGE = "https://i.ytimg.com/vi/";
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -34,7 +33,7 @@ class Formation
     #[ORM\Column(length: 20, nullable: true)]
     private ?string $videoId = null;
 
-    #[ORM\ManyToOne(inversedBy: 'formations')]
+    #[ORM\ManyToOne(inversedBy: 'formations', cascade: ['persist'])]
     private ?Playlist $playlist = null;
 
     /**
@@ -48,89 +47,126 @@ class Formation
         $this->categories = new ArrayCollection();
     }
 
+    /**
+     * Retourne l'ID de la formation.
+     */
     public function getId(): ?int
     {
         return $this->id;
     }
 
+    /**
+     * Retourne la date de publication.
+     */
     public function getPublishedAt(): ?\DateTimeInterface
     {
         return $this->publishedAt;
     }
 
-    public function setPublishedAt(?\DateTimeInterface $publishedAt): static
+    /**
+     * Définit la date de publication.
+     */
+    public function setPublishedAt(?\DateTimeInterface $publishedAt): self
     {
         $this->publishedAt = $publishedAt;
-
         return $this;
     }
 
-    public function getPublishedAtString(): string {
-        if($this->publishedAt == null){
-            return "";
-        }
-        return $this->publishedAt->format('d/m/Y');     
-    }      
-    
+    /**
+     * Retourne la date de publication sous forme de chaîne formatée.
+     */
+    public function getPublishedAtString(): string
+    {
+        return $this->publishedAt ? $this->publishedAt->format('d/m/Y') : "";
+    }
+
+    /**
+     * Retourne le titre de la formation.
+     */
     public function getTitle(): ?string
     {
         return $this->title;
     }
 
-    public function setTitle(?string $title): static
+    /**
+     * Définit le titre de la formation.
+     */
+    public function setTitle(?string $title): self
     {
         $this->title = $title;
-
         return $this;
     }
 
+    /**
+     * Retourne la description de la formation.
+     */
     public function getDescription(): ?string
     {
         return $this->description;
     }
 
-    public function setDescription(?string $description): static
+    /**
+     * Définit la description de la formation.
+     */
+    public function setDescription(?string $description): self
     {
         $this->description = $description;
-
         return $this;
     }
 
+    /**
+     * Retourne l'identifiant de la vidéo associée.
+     */
     public function getVideoId(): ?string
     {
         return $this->videoId;
     }
 
-    public function setVideoId(?string $videoId): static
+    /**
+     * Définit l'identifiant de la vidéo associée.
+     */
+    public function setVideoId(?string $videoId): self
     {
         $this->videoId = $videoId;
-
-        return $this;
-    }
-
-    public function getMiniature(): ?string
-    {
-        return self::cheminImage.$this->videoId."/default.jpg";
-    }
-
-    public function getPicture(): ?string
-    {
-        return self::cheminImage.$this->videoId."/hqdefault.jpg";
-    }
-    
-    public function getPlaylist(): ?playlist
-    {
-        return $this->playlist;
-    }
-
-    public function setPlaylist(?Playlist $playlist): static
-    {
-        $this->playlist = $playlist;
-
         return $this;
     }
 
     /**
+     * Retourne l'URL de la miniature YouTube.
+     */
+    public function getMiniature(): string
+    {
+        return $this->videoId ? self::CHEMIN_IMAGE . $this->videoId . "/default.jpg" : "";
+    }
+
+    /**
+     * Retourne l'URL de l'image haute qualité de YouTube.
+     */
+    public function getPicture(): string
+    {
+        return $this->videoId ? self::CHEMIN_IMAGE . $this->videoId . "/hqdefault.jpg" : "";
+    }
+
+    /**
+     * Retourne la playlist associée à la formation.
+     */
+    public function getPlaylist(): ?Playlist
+    {
+        return $this->playlist;
+    }
+
+    /**
+     * Définit la playlist associée à la formation.
+     */
+    public function setPlaylist(?Playlist $playlist): self
+    {
+        $this->playlist = $playlist;
+        return $this;
+    }
+
+    /**
+     * Retourne la liste des catégories associées à la formation.
+     *
      * @return Collection<int, Categorie>
      */
     public function getCategories(): Collection
@@ -138,19 +174,23 @@ class Formation
         return $this->categories;
     }
 
-    public function addCategory(Categorie $category): static
+    /**
+     * Ajoute une catégorie à la formation.
+     */
+    public function addCategory(Categorie $category): self
     {
         if (!$this->categories->contains($category)) {
             $this->categories->add($category);
         }
-
         return $this;
     }
 
-    public function removeCategory(Categorie $category): static
+    /**
+     * Supprime une catégorie de la formation.
+     */
+    public function removeCategory(Categorie $category): self
     {
         $this->categories->removeElement($category);
-
         return $this;
     }
 }

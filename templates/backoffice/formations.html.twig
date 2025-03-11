@@ -1,0 +1,124 @@
+{% extends "basefront.html.twig" %}
+
+{% block body %}
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <!-- Colonne Formation -->
+                <th class="text-left align-top" scope="col">
+                    Formation
+                    <br />
+                    <a href="{{ path('backoffice_formations_index', {
+                        champ:'title',
+                        ordre:'ASC',
+                        playlist: selectedPlaylist,
+                        category: selectedCategory,
+                        title: searchTitle
+                    }) }}" class="btn btn-info btn-sm" role="button"><</a>
+                    <a href="{{ path('backoffice_formations_index', {
+                        champ:'title',
+                        ordre:'DESC',
+                        playlist: selectedPlaylist,
+                        category: selectedCategory,
+                        title: searchTitle
+                    }) }}" class="btn btn-info btn-sm" role="button">></a>
+                    <form class="form-inline mt-1" method="GET" action="{{ path('backoffice_formations_index') }}">
+                        <div class="form-group mr-1 mb-2">
+                            <input type="text" class="form-control form-control-sm" name="title"
+                                   value="{{ searchTitle is defined ? searchTitle : '' }}" placeholder="Rechercher par titre">
+                            <button type="submit" class="btn btn-info btn-sm">Filtrer</button>
+                        </div>
+                    </form>
+                </th>
+
+                <!-- Colonne Playlist -->
+                <th class="text-left align-top" scope="col">
+                    Playlist
+                    <form class="form-inline mt-1" method="GET" action="{{ path('backoffice_formations_index') }}">
+                        <select name="playlist" class="form-select form-select-sm" onchange="this.form.submit()">
+                            <option value="">Toutes les playlists</option>
+                            {% for playlist in playlists %}
+                                <option value="{{ playlist.id }}" {% if playlist.id == selectedPlaylist %}selected{% endif %}>
+                                    {{ playlist.name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </form>
+                </th>
+
+                <!-- Colonne Catégories -->
+                <th class="text-left align-top" scope="col">
+                    Catégories
+                    <form class="form-inline mt-1" method="GET" action="{{ path('backoffice_formations_index') }}">
+                        <select name="category" class="form-select form-select-sm" onchange="this.form.submit()">
+                            <option value="">Toutes les catégories</option>
+                            {% for categorie in categories %}
+                                <option value="{{ categorie.id }}" {% if categorie.id == selectedCategory %}selected{% endif %}>
+                                    {{ categorie.name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </form>
+                </th>
+
+                <!-- Colonne Date -->
+                <th class="text-center align-top" scope="col">
+                    Date
+                    <br />
+                    <a href="{{ path('backoffice_formations_index', {
+                        champ:'publishedAt',
+                        ordre:'ASC',
+                        playlist: selectedPlaylist,
+                        category: selectedCategory,
+                        title: searchTitle
+                    }) }}" class="btn btn-info btn-sm" role="button"><</a>
+                    <a href="{{ path('backoffice_formations_index', {
+                        champ:'publishedAt',
+                        ordre:'DESC',
+                        playlist: selectedPlaylist,
+                        category: selectedCategory,
+                        title: searchTitle
+                    }) }}" class="btn btn-info btn-sm" role="button">></a>
+                </th>
+
+                <!-- Colonne Miniature -->
+                <th class="text-center align-top" scope="col">&nbsp;</th>
+                
+                <th class="text-center align-top" scope="col">
+                    Actions
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for formation in formations %}
+                <tr class="align-middle">
+                    <td>
+                        <h5 class="text-info">{{ formation.title }}</h5>
+                    </td>
+                    <td class="text-left">
+                        {{ formation.playlist.name }}
+                    </td>
+                    <td class="text-left">
+                        {% for categorie in formation.categories %}
+                            {{ categorie.name }}<br />
+                        {% endfor %}
+                    </td>
+                    <td class="text-center">
+                        {{ formation.getPublishedAtString() }}
+                    </td>
+                    <td class="text-center">
+                        {% if formation.miniature %}
+                            <a href="{{ path('formations.showone', {id: formation.id}) }}">
+                                <img src="{{ formation.miniature }}" class="img-thumbnail" width="100">
+                            </a>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{{ path('backoffice_formations_edit', {id: formation.id}) }}">Modifier</a>
+                        <a href="{{ path('backoffice_formations_delete', {id: formation.id}) }}" onclick="return confirm('Confirmer la suppression ?');">Supprimer</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

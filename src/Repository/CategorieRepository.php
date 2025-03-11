@@ -18,30 +18,33 @@ class CategorieRepository extends ServiceEntityRepository
 
     public function add(Categorie $entity): void
     {
-        $this->getEntityManager()->persist($entity);
-        $this->getEntityManager()->flush();
+        $entityManager = $this->getEntityManager();
+        $entityManager->persist($entity);
+        $entityManager->flush();
     }
 
     public function remove(Categorie $entity): void
     {
-        $this->getEntityManager()->remove($entity);
-        $this->getEntityManager()->flush();
+        $entityManager = $this->getEntityManager();
+        $entityManager->remove($entity);
+        $entityManager->flush();
     }
-    
+
     /**
-     * Retourne la liste des catégories des formations d'une playlist
-     * @param type $idPlaylist
+     * Retourne la liste des catégories des formations d'une playlist.
+     *
+     * @param int|string $idPlaylist
      * @return array
      */
-    public function findAllForOnePlaylist($idPlaylist): array{
+    public function findAllForOnePlaylist(int|string $idPlaylist): array
+    {
         return $this->createQueryBuilder('c')
-                ->join('c.formations', 'f')
-                ->join('f.playlist', 'p')
-                ->where('p.id=:id')
-                ->setParameter('id', $idPlaylist)
-                ->orderBy('c.name', 'ASC')   
-                ->getQuery()
-                ->getResult();        
-    }  
-    
+            ->join('c.formations', 'f')
+            ->join('f.playlist', 'p')
+            ->where('p.id = :id')
+            ->setParameter('id', $idPlaylist)
+            ->orderBy('c.name', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
 }

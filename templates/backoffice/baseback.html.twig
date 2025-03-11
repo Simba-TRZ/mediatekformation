@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Back-Office{% endblock %}</title>
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+    <script src="{{ asset('js/script.js') }}" defer></script>
+</head>
+<body>
+    <header>
+        <h1>Back-Office</h1>
+        <nav>
+            <ul>
+                <li><a href="{{ path('backoffice_formations_index') }}">Formations</a></li>
+                <li><a href="{{ path('playlists') }}">Playlists</a></li>
+                <li><a href="{{ path('formations') }}">Catégories</a></li>
+                {% if app.request is not null and app.request.hasPreviousSession %}
+                    <li><a href="{{ path('logout') }}">Déconnexion</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        {% block body %}{% endblock %}
+    </main>
+
+    <footer>
+        <p>© 2025 MediaTekFormation - Back-Office</p>
+    </footer>
+</body>
+</html>

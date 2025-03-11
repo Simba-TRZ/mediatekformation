@@ -1,0 +1,40 @@
+{{ form_start(formformations) }}
+
+<div>
+    <div class="row">
+        <div class="col">
+            {{ form_row(formformations.title) }}
+        </div>
+        <div class="col">
+            {{ form_row(formformations.description) }}
+        </div>
+        <div class="col">
+            {{ form_row(formformations.publishedAt) }}
+        </div>
+    </div>
+
+    <div class="row" style="margin-top: 1rem">
+        <div class="col">
+            {{ form_row(formformations.videoId) }}
+        </div>
+        <div class="col">
+            {{ form_row(formformations.categories) }}
+        </div>
+        <div class="col">
+            {{ form_row(formformations.playlist) }}
+        </div>
+    </div>
+</div>
+
+<div>
+    <div class="align-content-center justify-content-center" style="display: flex; margin-top: 1rem;">
+        {{ form_row(formformations.submit) }}
+        <div class="mb-3" style="padding-left: 5rem">
+            <a href="{{ path('backoffice_formations_index') }}" class="btn btn-secondary">
+                Annuler
+            </a>
+        </div>
+    </div>
+</div>
+
+{{ form_end(formformations) }}
