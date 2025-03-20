@@ -13,6 +13,7 @@
         <nav>
             <ul>
                 <li><a href="{{ path('backoffice_formations_index') }}">Formations</a></li>
+                <li><a href="{{ path('backoffice_playlists_index') }}">playlists</a></li>
                 <li><a href="{{ path('playlists') }}">Playlists</a></li>
                 <li><a href="{{ path('formations') }}">Catégories</a></li>
                 {% if app.request is not null and app.request.hasPreviousSession %}
@@ -23,6 +24,15 @@
     </header>
 
     <main>
+        <!-- Affichage des messages flash -->
+        {% for label, messages in app.flashes %}
+            {% for message in messages %}
+                <div class="alert alert-{{ label }} mt-3">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endfor %}
+        
         {% block body %}{% endblock %}
     </main>
 

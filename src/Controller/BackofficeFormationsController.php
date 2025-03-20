@@ -15,6 +15,7 @@ use Symfony\Component\Routing\Annotation\Route;
 /**
  *  Contrôleur du Back-Office pour les formations.
  */
+#[IsGranted('ROLE_ADMIN')]
 class BackofficeFormationsController extends AbstractController
 {
     private FormationRepository $formationRepository;

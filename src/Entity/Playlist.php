@@ -69,6 +69,14 @@ class Playlist
     {
         return $this->formations;
     }
+    
+    /**
+     * @return Collection<int, Formation>
+     */
+    public function getFormationsCount(): int
+    {
+        return count($this->formations);
+    }
 
     public function addFormation(Formation $formation): self
     {

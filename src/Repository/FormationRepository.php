@@ -39,6 +39,19 @@ class FormationRepository extends ServiceEntityRepository
         $entityManager->remove($entity);
         $entityManager->flush();
     }
+    
+    /**
+     * Retourne les n formations les plus récentes
+     * @param type $nb
+     * @return Formation[]
+     */
+    public function findAllLasted($nb) : array {
+        return $this->createQueryBuilder('f')
+                ->orderBy('f.publishedAt', 'DESC')
+                ->setMaxResults($nb)     
+                ->getQuery()
+                ->getResult();
+    }
 
     /**
      *  Retourner toutes les formations triées sur un champ donné.
@@ -116,5 +129,20 @@ class FormationRepository extends ServiceEntityRepository
             ->orderBy('f.publishedAt', 'DESC')
             ->getQuery()
             ->getResult();
+    }
+    
+    /**
+     * Retourne la liste des formations d'une playlist
+     * @param type $idPlaylist
+     * @return array
+     */
+    public function findAllForOnePlaylist($idPlaylist): array{
+        return $this->createQueryBuilder('f')
+                ->join('f.playlist', 'p')
+                ->where('p.id=:id')
+                ->setParameter('id', $idPlaylist)
+                ->orderBy('f.publishedAt', 'ASC')   
+                ->getQuery()
+                ->getResult();        
     }
 }

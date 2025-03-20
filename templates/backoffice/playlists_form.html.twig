@@ -1,0 +1,14 @@
+{% extends 'backoffice/baseback.html.twig' %}
+
+{% block body %}
+    <h1>{% if formPlaylists.vars.value.id %}Modifier{% else %}Ajouter{% endif %} une Playlist</h1>
+
+    {{ form_start(formPlaylists) }}
+        {{ form_row(formPlaylists.name) }}
+        {{ form_row(formPlaylists.description) }}
+        
+        <button class="btn btn-success">{{ formPlaylists.vars.value.id ? 'Mettre à jour' : 'Créer' }}</button>
+    {{ form_end(formPlaylists) }}
+
+    <a href="{{ path('backoffice_playlists_index') }}" class="btn btn-secondary mt-2">Retour à la liste</a>
+{% endblock %}

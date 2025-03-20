@@ -1,0 +1,40 @@
+{% extends 'backoffice/baseback.html.twig' %}
+
+{% block body %}
+<h1>Gestion des Playlists</h1>
+
+<a href="{{ path('backoffice_playlists_add') }}" class="btn btn-success">Ajouter une Playlist</a>
+
+<table class="table table-striped mt-3">
+    <thead>
+        <tr>
+            <th>Nom</th>
+            <th>Description</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for playlist in playlists %}
+            <tr>
+                <td>{{ playlist.name }}</td>
+                <td>{{ playlist.description }}</td>
+                <td>
+                    <a href="{{ path('backoffice_playlists_edit', {id: playlist.id}) }}" class="btn btn-primary">Modifier</a>
+                    <form action="{{ path('backoffice_playlists_delete', {id: playlist.id}) }}" method="POST" style="display:inline-block" onsubmit="return confirm('Confirmer la suppression ?');">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete') }}">
+                        {% if playlist.formationsCount > 0 %}
+                            <button type="submit" class="btn btn-danger" disabled>Supprimer</button>
+                        {% else %}
+                            <button type="submit" class="btn btn-danger">Supprimer</button>
+                        {% endif %}
+                    </form>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="3">Aucune playlist disponible.</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

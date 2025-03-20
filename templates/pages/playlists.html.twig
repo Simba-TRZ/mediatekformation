@@ -53,9 +53,8 @@
         <tbody>
             <!-- Vérification si des playlists existent -->
             {% if playlists|length > 0 %}
-                {% for playlistData in playlists %}
-                    {% set playlist = playlistData.playlist %}
-                    {% set formations_count = playlistData.formations_count %}
+                {% for playlist in playlists %}
+                    {% set formations_count = playlist.formationsCount %}
                     
                     <tr class="align-middle">
                         <!-- Affichage du nom de la playlist -->

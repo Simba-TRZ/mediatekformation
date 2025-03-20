@@ -72,4 +72,10 @@ class Categorie
 
         return $this;
     }
+    
+    public function getFormationsCount(): int
+    {
+        return count($this->formations);
+    }
+
 }

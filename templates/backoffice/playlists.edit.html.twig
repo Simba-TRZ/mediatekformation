@@ -1,0 +1,27 @@
+{% extends 'backoffice/baseback.html.twig' %}
+
+{% block body %}
+    <h1>Modifier la Playlist</h1>
+
+    {{ form_start(formPlaylists) }}
+
+    <div>
+        <div class="row">
+            <div class="col">
+                {{ form_row(formPlaylists.name) }}
+            </div>
+            <div class="col">
+                {{ form_row(formPlaylists.description) }}
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-3">
+        <div class="col">
+            <button type="submit" class="btn btn-success">Enregistrer</button>
+            <a href="{{ path('backoffice_playlists_index') }}" class="btn btn-secondary">Annuler</a>
+        </div>
+    </div>
+
+    {{ form_end(formPlaylists) }}
+{% endblock %}
