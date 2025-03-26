@@ -59,7 +59,7 @@ class FormationType extends AbstractType
                 'constraints' => [
                     new Assert\GreaterThanOrEqual([
                         'value' => 'today',
-                        'message' => 'La date ne peut pas être antérieure à aujourd\'hui.',
+                        'message' => 'La date ne peut pas être postérieure à aujourd\'hui.',
                     ]),
                 ]
             ])

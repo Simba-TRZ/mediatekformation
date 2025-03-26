@@ -14,8 +14,9 @@
             <ul>
                 <li><a href="{{ path('backoffice_formations_index') }}">Formations</a></li>
                 <li><a href="{{ path('backoffice_playlists_index') }}">playlists</a></li>
-                <li><a href="{{ path('playlists') }}">Playlists</a></li>
-                <li><a href="{{ path('formations') }}">Catégories</a></li>
+                <li><a href="{{ path('backoffice_playlists_index') }}">Playlists</a></li>
+                <li><a href="{{ path('backoffice_categories_index') }}">Catégories</a></li>
+
                 {% if app.request is not null and app.request.hasPreviousSession %}
                     <li><a href="{{ path('logout') }}">Déconnexion</a></li>
                 {% endif %}

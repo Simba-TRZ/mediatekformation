@@ -75,4 +75,14 @@ class PlaylistsController extends AbstractController
             'playlistformations' => $this->formationRepository->findAllForOnePlaylist($id),
         ]);
     }
+    
+    #[Route('/backoffice/playlists', name: 'backoffice_playlists_index')]
+    public function indexBack(): Response
+    {
+        return $this->render('backoffice/playlists.html.twig', [
+            'playlists' => $this->playlistRepository->findAllOrderByName('ASC'),
+            'categories' => $this->categorieRepository->findAll(),
+        ]);
+    }
+
 }

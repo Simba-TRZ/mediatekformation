@@ -76,7 +76,8 @@ class PlaylistRepository extends ServiceEntityRepository
         $qb = $this->createQueryBuilder('p');
 
         if ($table === 'categories') {
-            $qb->leftJoin('p.categories', 'c')
+            $qb->leftJoin('p.formations', 'f')
+               ->leftJoin('f.categories', 'c')
                ->andWhere("c." . $champ . " LIKE :valeur");
         } else {
             $qb->andWhere("p." . $champ . " LIKE :valeur");

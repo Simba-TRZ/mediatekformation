@@ -3,29 +3,42 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/wamp64/www/mediatekformation/templates/backoffice/playlists_form.html.twig</file>
             <file>file:/C:/wamp64/www/mediatekformation/src/Controller/BackofficeCategoriesController.php</file>
-            <file>file:/C:/wamp64/www/mediatekformation/templates/backoffice/categories.html.twig</file>
             <file>file:/C:/wamp64/www/mediatekformation/src/Repository/UserRepository.php</file>
             <file>file:/C:/wamp64/www/mediatekformation/src/DataFixtures/UserFixtures.php</file>
+            <file>file:/C:/wamp64/www/mediatekformation/src/Entity/Formation.php</file>
+            <file>file:/C:/wamp64/www/mediatekformation/tests/Repository/PlaylistRepositoryTest.php</file>
             <file>file:/C:/wamp64/www/mediatekformation/templates/backoffice/playlists.html.twig</file>
-            <file>file:/C:/wamp64/www/mediatekformation/src/Controller/BackofficeFormationsController.php</file>
-            <file>file:/C:/wamp64/www/mediatekformation/src/Controller/AccueilController.php</file>
+            <file>file:/C:/wamp64/www/mediatekformation/tests/controller/AccueilControllerTest.php</file>
+            <file>file:/C:/wamp64/www/mediatekformation/.env.test</file>
             <file>file:/C:/wamp64/www/mediatekformation/src/Entity/Categorie.php</file>
             <file>file:/C:/wamp64/www/mediatekformation/src/Form/PlaylistType.php</file>
-            <file>file:/C:/wamp64/www/mediatekformation/src/Controller/LoginController.php</file>
-            <file>file:/C:/wamp64/www/mediatekformation/src/Repository/PlaylistRepository.php</file>
             <file>file:/C:/wamp64/www/mediatekformation/config/packages/security.yaml</file>
-            <file>file:/C:/wamp64/www/mediatekformation/templates/security/login.html.twig</file>
-            <file>file:/C:/wamp64/www/mediatekformation/src/Controller/BackofficePlaylistsController.php</file>
             <file>file:/C:/wamp64/www/mediatekformation/templates/base.html.twig</file>
-            <file>file:/C:/wamp64/www/mediatekformation/src/Controller/PlaylistsController.php</file>
             <file>file:/C:/wamp64/www/mediatekformation/src/Entity/User.php</file>
-            <file>file:/C:/wamp64/www/mediatekformation/config/packages/twig.yaml</file>
-            <file>file:/C:/wamp64/www/mediatekformation/templates/backoffice/playlists.edit.html.twig</file>
+            <file>file:/C:/wamp64/www/mediatekformation/templates/backoffice/formations.html.twig</file>
+            <file>file:/C:/wamp64/www/mediatekformation/tests/DataFixtures/TestPlaylistFixtures.php</file>
             <file>file:/C:/wamp64/www/mediatekformation/src/Entity/Playlist.php</file>
             <file>file:/C:/wamp64/www/mediatekformation/src/Form/CategorieType.php</file>
             <file>file:/C:/wamp64/www/mediatekformation/templates/backoffice/baseback.html.twig</file>
+            <file>file:/C:/wamp64/www/mediatekformation/src/Controller/FormationsController.php</file>
+            <file>file:/C:/wamp64/www/mediatekformation/templates/backoffice/playlists_form.html.twig</file>
+            <file>file:/C:/wamp64/www/mediatekformation/templates/backoffice/categories.html.twig</file>
+            <file>file:/C:/wamp64/www/mediatekformation/tests/Entity/FormationValidationTest.php</file>
+            <file>file:/C:/wamp64/www/mediatekformation/src/Controller/BackofficeFormationsController.php</file>
+            <file>file:/C:/wamp64/www/mediatekformation/src/Controller/AccueilController.php</file>
+            <file>file:/C:/wamp64/www/mediatekformation/src/Controller/LoginController.php</file>
+            <file>file:/C:/wamp64/www/mediatekformation/src/Repository/PlaylistRepository.php</file>
+            <file>file:/C:/wamp64/www/mediatekformation/templates/security/login.html.twig</file>
+            <file>file:/C:/wamp64/www/mediatekformation/tests/Entity/FormationTest.php</file>
+            <file>file:/C:/wamp64/www/mediatekformation/src/Controller/BackofficePlaylistsController.php</file>
+            <file>file:/C:/wamp64/www/mediatekformation/config/services.yaml</file>
+            <file>file:/C:/wamp64/www/mediatekformation/src/Controller/PlaylistsController.php</file>
+            <file>file:/C:/wamp64/www/mediatekformation/src/Form/FormationType.php</file>
+            <file>file:/C:/wamp64/www/mediatekformation/templates/pages/accueil.html.twig</file>
+            <file>file:/C:/wamp64/www/mediatekformation/config/packages/twig.yaml</file>
+            <file>file:/C:/wamp64/www/mediatekformation/tests/Entity/PlaylistIntegrationTest.php</file>
+            <file>file:/C:/wamp64/www/mediatekformation/templates/backoffice/playlists.edit.html.twig</file>
         </group>
     </open-files>
 </project-private>
