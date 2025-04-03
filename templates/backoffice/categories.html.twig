@@ -8,7 +8,7 @@
 {{ form_start(formCategorie) }}
     {{ form_row(formCategorie.name) }}
     <button type="submit" class="btn btn-success">Ajouter</button>
-{{ form_end(formCategorie) }}
+{{ form_end(formCategorie, {'render_rest': false}) }}
 
 <!-- Liste des catégories -->
 <h2>Liste des Catégories</h2>

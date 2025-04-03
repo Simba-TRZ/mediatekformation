@@ -1,44 +1,50 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Back-Office{% endblock %}</title>
-    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
-    <script src="{{ asset('js/script.js') }}" defer></script>
-</head>
-<body>
-    <header>
+
+
+{% extends "base.html.twig" %}
+
+{% block title %}{% endblock %}
+{% block stylesheets %}{% endblock %}
+{% block top %}
+    <div class="container">
+        <!-- titre -->
+        <div class="text-left">
+            <img src="{{ app.request.getBasePath()~'/banniere.jpg' }}" >
+        </div>
         <h1>Back-Office</h1>
-        <nav>
-            <ul>
-                <li><a href="{{ path('backoffice_formations_index') }}">Formations</a></li>
-                <li><a href="{{ path('backoffice_playlists_index') }}">playlists</a></li>
-                <li><a href="{{ path('backoffice_playlists_index') }}">Playlists</a></li>
-                <li><a href="{{ path('backoffice_categories_index') }}">Catégories</a></li>
-
-                {% if app.request is not null and app.request.hasPreviousSession %}
-                    <li><a href="{{ path('logout') }}">Déconnexion</a></li>
-                {% endif %}
-            </ul>
-        </nav>
-    </header>
-
-    <main>
-        <!-- Affichage des messages flash -->
-        {% for label, messages in app.flashes %}
-            {% for message in messages %}
-                <div class="alert alert-{{ label }} mt-3">
-                    {{ message }}
-                </div>
-            {% endfor %}
-        {% endfor %}
-        
-        {% block body %}{% endblock %}
-    </main>
-
-    <footer>
-        <p>© 2025 MediaTekFormation - Back-Office</p>
-    </footer>
-</body>
-</html>
+        <!-- menu -->
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('accueil') }}">Accueil</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('backoffice_formations_index') }}">Formations</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('backoffice_playlists_index') }}">Playlists</a>
+                    </li>                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('backoffice_categories_index') }}">Catégories</a>
+                    </li>     
+                    {% if app.request is not null and app.request.hasPreviousSession %}
+                        <li><a href="{{ path('logout') }}">Déconnexion</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </nav>        
+    </div>
+{% endblock %}
+{% block body %}{% endblock %}
+{% block footer %}
+    <div class="container text-center">
+        <footer>
+            <hr>
+            <p><small><i>
+                Consultez nos <a class="link-secondary" href="{{ path('cgu') }}">Conditions Générales d'Utilisation</a>
+            </i></small></p>
+            
+        </footer>
+    </div>
+{% endblock %}
+{% block javascripts %}{% endblock %}
