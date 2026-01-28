@@ -2,19 +2,22 @@
 
 namespace App\Controller;
 
+use App\Entity\Formation;
+use App\Form\FormationType;
 use App\Repository\FormationRepository;
 use App\Repository\PlaylistRepository;
 use App\Repository\CategorieRepository;
-use App\Form\FormationType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 /**
- *  Contrôleur du Back-Office pour les formations.
+ * Contrôleur du Back-Office pour les formations.
  */
+#[Route('/backoffice/formations')]
 #[IsGranted('ROLE_ADMIN')]
 class BackofficeFormationsController extends AbstractController
 {
@@ -36,93 +39,84 @@ class BackofficeFormationsController extends AbstractController
     }
 
     /**
-     * Afficher la liste des formations avec filtres et tri.
+     * Afficher la liste des formations.
      */
-    #[Route('/backoffice/formations/', name: 'backoffice_formations_index', methods: ['GET'])]
+    #[Route('/', name: 'backoffice_formations_index')]
     public function index(Request $request): Response
     {
-        $champ = $request->query->get('champ', 'title');
-        $ordre = $request->query->get('ordre', 'ASC');
-        $playlistId = $request->query->get('playlist');
-        $categoryId = $request->query->get('category');
-        $searchTitle = $request->query->get('title', '');
-
-        // Récupération des formations selon les filtres
-        if (!empty($searchTitle)) {
-            $formations = $this->formationRepository->findByTitle($searchTitle, $champ, $ordre);
-        } elseif (!empty($playlistId)) {
-            $formations = $this->formationRepository->findByPlaylist($playlistId, $champ, $ordre);
-        } elseif (!empty($categoryId)) {
-            $formations = $this->formationRepository->findByCategory($categoryId, $champ, $ordre);
-        } else {
-            $formations = $this->formationRepository->findAllOrderBy($champ, $ordre);
-        }
-
+        $formations = $this->formationRepository->findAllOrderBy('title', 'ASC');
+        $playlists = $this->playlistRepository->findAll();
+        $categories = $this->categorieRepository->findAll();
+        
         return $this->render('backoffice/formations.html.twig', [
             'formations' => $formations,
-            'playlists' => $this->playlistRepository->findAll(),
-            'categories' => $this->categorieRepository->findAll(),
-            'champ' => $champ,
-            'ordre' => $ordre,
-            'selectedPlaylist' => $playlistId,
-            'selectedCategory' => $categoryId,
-            'searchTitle' => $searchTitle,
+            'playlists' => $playlists,
+            'categories' => $categories,
+            'selectedPlaylist' => $request->get('playlist', ''),
+            'selectedCategory' => $request->get('category', ''),
+            'searchTitle' => $request->get('title', ''),
         ]);
     }
 
     /**
-     * Modifier une formation.
+     * Afficher le formulaire d'édition d'une formation.
      */
-    #[Route('/backoffice/formations/edit/{id}', name: 'backoffice_formations_edit')]
-    public function edit(int $id, Request $request): Response
+    #[Route('/edit/{id}', name: 'backoffice_formations_edit')]
+    public function edit(Request $request, Formation $formation): Response
     {
-        $formation = $this->formationRepository->find($id);
-        $categories = $this->categorieRepository->findAll();
-
         $form = $this->createForm(FormationType::class, $formation);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->formationRepository->add($formation);
+            $this->entityManager->flush();
+            $this->addFlash('success', 'Formation modifiée avec succès.');
+            
             return $this->redirectToRoute('backoffice_formations_index');
         }
 
-        return $this->render('backoffice/formations.edit.html.twig', [
-            'formformations' => $form->createView(),
-            'categories' => $categories,
+        return $this->render('backoffice/formations_form.html.twig', [
             'formation' => $formation,
+            'form' => $form->createView(),
         ]);
     }
 
     /**
      * Supprimer une formation.
      */
-    #[Route('/backoffice/formations/delete/{id}', name: 'backoffice_formations_delete', methods: ['POST'])]
-    public function delete(int $id): Response
+    #[Route('/delete/{id}', name: 'backoffice_formations_delete', methods: ['POST'])]
+    public function delete(Request $request, Formation $formation): Response
     {
-        $formation = $this->formationRepository->find($id);
-        if ($formation) {
+        $submittedToken = (string) $request->request->get('_token');
+
+        if ($this->isCsrfTokenValid('delete' . $formation->getId(), $submittedToken)) {
             $this->entityManager->remove($formation);
             $this->entityManager->flush();
+            $this->addFlash('success', 'Formation supprimée avec succès.');
+        } else {
+            $this->addFlash('error', 'Token CSRF invalide.');
         }
 
         return $this->redirectToRoute('backoffice_formations_index');
     }
 
     /**
-     * Recherche les formations contenant une valeur donnée.
+     * Recherche de formations.
      */
-    #[Route('/backoffice/formations/recherche/{champ}', name: 'backoffice_formations_recherche', methods: ['GET'])]
+    #[Route('/recherche/{champ}', name: 'backoffice_formations_recherche')]
     public function findAllContain(string $champ, Request $request): Response
     {
-        $valeur = $request->query->get('recherche', '');
+        $valeur = $request->get('recherche');
         $formations = $this->formationRepository->findByContainValue($champ, $valeur);
+        $playlists = $this->playlistRepository->findAll();
         $categories = $this->categorieRepository->findAll();
-
+        
         return $this->render('backoffice/formations.html.twig', [
             'formations' => $formations,
+            'playlists' => $playlists,
             'categories' => $categories,
-            'searchTitle' => $valeur
+            'selectedPlaylist' => $request->get('playlist', ''),
+            'selectedCategory' => $request->get('category', ''),
+            'searchTitle' => $request->get('title', ''),
         ]);
     }
 }

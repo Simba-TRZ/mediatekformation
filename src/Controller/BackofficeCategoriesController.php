@@ -10,14 +10,19 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 /**
- *  Contrôleur du Back-Office pour les catégories.
+ * Contrôleur du Back-Office pour les catégories.
  */
 #[Route('/backoffice/categories')]
 #[IsGranted('ROLE_ADMIN')]
 class BackofficeCategoriesController extends AbstractController
 {
+    private const FLASH_SUCCESS = 'success';
+    private const FLASH_ERROR = 'error';
+    private const CSRF_DELETE_PREFIX = 'delete';
+    
     private CategorieRepository $categorieRepository;
     private EntityManagerInterface $entityManager;
 
@@ -44,11 +49,11 @@ class BackofficeCategoriesController extends AbstractController
             // Vérifier si la catégorie existe déjà
             $existingCategory = $this->categorieRepository->findOneBy(['name' => $categorie->getName()]);
             if ($existingCategory) {
-                $this->addFlash('error', 'Cette catégorie existe déjà.');
+                $this->addFlash(self::FLASH_ERROR, 'Cette catégorie existe déjà.');
             } else {
                 $this->entityManager->persist($categorie);
                 $this->entityManager->flush();
-                $this->addFlash('success', 'La catégorie a bien été ajoutée.');
+                $this->addFlash(self::FLASH_SUCCESS, 'La catégorie a bien été ajoutée.');
             }
             return $this->redirectToRoute('backoffice_categories_index');
         }
@@ -66,25 +71,25 @@ class BackofficeCategoriesController extends AbstractController
     public function delete(Request $request, int $id): Response
     {
         $categorie = $this->categorieRepository->find($id);
-        $submittedToken = $request->request->get('_token');
+        $submittedToken = (string) $request->request->get('_token');
 
         if (!$categorie) {
-            $this->addFlash('error', 'Catégorie non trouvée.');
+            $this->addFlash(self::FLASH_ERROR, 'Catégorie non trouvée.');
             return $this->redirectToRoute('backoffice_categories_index');
         }
 
         // Vérifier si la catégorie est rattachée à une formation
         if (!$categorie->getFormations()->isEmpty()) {
-            $this->addFlash('error', 'Impossible de supprimer cette catégorie car elle est associée à une ou plusieurs formations.');
+            $this->addFlash(self::FLASH_ERROR, 'Impossible de supprimer cette catégorie car elle est associée à une ou plusieurs formations.');
             return $this->redirectToRoute('backoffice_categories_index');
         }
 
-        if ($this->isCsrfTokenValid('delete' . $categorie->getId(), $submittedToken)) {
+        if ($this->isCsrfTokenValid(self::CSRF_DELETE_PREFIX . $categorie->getId(), $submittedToken)) {
             $this->entityManager->remove($categorie);
             $this->entityManager->flush();
-            $this->addFlash('success', 'La catégorie a bien été supprimée.');
+            $this->addFlash(self::FLASH_SUCCESS, 'La catégorie a bien été supprimée.');
         } else {
-            $this->addFlash('error', 'Token CSRF invalide. Suppression annulée.');
+            $this->addFlash(self::FLASH_ERROR, 'Token CSRF invalide. Suppression annulée.');
         }
 
         return $this->redirectToRoute('backoffice_categories_index');
