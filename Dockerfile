@@ -21,20 +21,17 @@ COPY docker/apache.conf /etc/apache2/sites-available/000-default.conf
 # Définir le répertoire de travail
 WORKDIR /var/www/html
 
-# Copier composer.json et composer.lock d'abord
-COPY composer.json composer.lock ./
-
-# Installer les dépendances avec dev d'abord pour éviter les erreurs
-RUN composer install --optimize-autoloader --no-interaction
-
 # Copier tous les fichiers du projet
 COPY . .
 
-# Vider le cache Symfony en mode prod
-RUN APP_ENV=prod php bin/console cache:clear 2>/dev/null || true
+# Installer les dépendances sans scripts automatiques
+RUN composer install --no-dev --optimize-autoloader --no-interaction --no-scripts
+
+# Vider le cache Symfony
+RUN php bin/console cache:clear --env=prod || true
 
 # Donner les permissions
-RUN chown -R www-data:www-data /var/www/html/var
+RUN chown -R www-data:www-data /var/www/html/var /var/www/html/public
 
 # Apache écoute sur le port 80
 EXPOSE 80
