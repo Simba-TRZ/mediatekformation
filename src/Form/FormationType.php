@@ -22,17 +22,20 @@ class FormationType extends AbstractType
             ->add('title', TextType::class, [
                 'required' => true,
                 'label' => 'Titre',
+                'attr' => ['class' => 'form-control'],
                 'constraints' => [
                     new Assert\NotBlank(['message' => 'Le titre est obligatoire.'])
                 ]
             ])
             ->add('description', TextType::class, [
                 'required' => false,
-                'label' => 'Description'
+                'label' => 'Description',
+                'attr' => ['class' => 'form-control']
             ])
             ->add('videoId', TextType::class, [
                 'required' => false,
                 'label' => 'ID de la Vidéo',
+                'attr' => ['class' => 'form-control'],
                 'constraints' => [
                     new Assert\Length([
                         'max' => 20,
@@ -44,24 +47,21 @@ class FormationType extends AbstractType
                 'class' => Playlist::class,
                 'choice_label' => 'name',
                 'required' => true,
-                'label' => 'Playlist'
+                'label' => 'Playlist',
+                'attr' => ['class' => 'form-select']
             ])
             ->add('categories', EntityType::class, [
                 'class' => Categorie::class,
                 'choice_label' => 'name',
                 'multiple' => true,
                 'required' => false,
-                'label' => 'Catégories'
+                'label' => 'Catégories',
+                'attr' => ['class' => 'form-select']
             ])
             ->add('publishedAt', DateType::class, [
                 'widget' => 'single_text',
                 'label' => 'Date de Publication',
-                'constraints' => [
-                    new Assert\GreaterThanOrEqual([
-                        'value' => 'today',
-                        'message' => 'La date ne peut pas être postérieure à aujourd\'hui.',
-                    ]),
-                ]
+                'attr' => ['class' => 'form-control'],
             ])
             ->add('submit', SubmitType::class, [
                 'label' => 'Enregistrer',

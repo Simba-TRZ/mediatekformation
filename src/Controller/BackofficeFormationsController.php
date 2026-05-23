@@ -44,17 +44,55 @@ class BackofficeFormationsController extends AbstractController
     #[Route('/', name: 'backoffice_formations_index')]
     public function index(Request $request): Response
     {
-        $formations = $this->formationRepository->findAllOrderBy('title', 'ASC');
+        $playlist = $request->get('playlist', '');
+        $category = $request->get('category', '');
+        $title = $request->get('title', '');
+        $champ = $request->get('champ', 'title');
+        $ordre = $request->get('ordre', 'ASC');
+
+        if ($title) {
+            $formations = $this->formationRepository->findByTitle($title, $champ, $ordre);
+        } elseif ($playlist) {
+            $formations = $this->formationRepository->findByPlaylist((int)$playlist, $champ, $ordre);
+        } elseif ($category) {
+            $formations = $this->formationRepository->findByCategory((int)$category, $champ, $ordre);
+        } else {
+            $formations = $this->formationRepository->findAllOrderBy($champ, $ordre);
+        }
+
         $playlists = $this->playlistRepository->findAll();
         $categories = $this->categorieRepository->findAll();
-        
+
         return $this->render('backoffice/formations.html.twig', [
             'formations' => $formations,
             'playlists' => $playlists,
             'categories' => $categories,
-            'selectedPlaylist' => $request->get('playlist', ''),
-            'selectedCategory' => $request->get('category', ''),
-            'searchTitle' => $request->get('title', ''),
+            'selectedPlaylist' => $playlist,
+            'selectedCategory' => $category,
+            'searchTitle' => $title,
+        ]);
+    }
+
+    /**
+     * Ajouter une nouvelle formation.
+     */
+    #[Route('/add', name: 'backoffice_formations_add')]
+    public function add(Request $request): Response
+    {
+        $formation = new Formation();
+        $form = $this->createForm(FormationType::class, $formation);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->entityManager->persist($formation);
+            $this->entityManager->flush();
+            $this->addFlash('success', 'Formation ajoutée avec succès.');
+            return $this->redirectToRoute('backoffice_formations_index');
+        }
+
+        return $this->render('backoffice/formations_form.html.twig', [
+            'formation' => $formation,
+            'form' => $form->createView(),
         ]);
     }
 
@@ -70,7 +108,6 @@ class BackofficeFormationsController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->entityManager->flush();
             $this->addFlash('success', 'Formation modifiée avec succès.');
-            
             return $this->redirectToRoute('backoffice_formations_index');
         }
 

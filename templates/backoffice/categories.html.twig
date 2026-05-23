@@ -1,44 +1,68 @@
 {% extends 'backoffice/baseback.html.twig' %}
 
 {% block body %}
-<h1>Gestion des Catégories</h1>
+<div class="container mt-4">
 
-<!-- Formulaire d'ajout -->
-<h2>Ajouter une Catégorie</h2>
-{{ form_start(formCategorie) }}
-    {{ form_row(formCategorie.name) }}
-    <button type="submit" class="btn btn-success">Ajouter</button>
-{{ form_end(formCategorie, {'render_rest': false}) }}
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success">{{ message }}</div>
+    {% endfor %}
+    {% for message in app.flashes('error') %}
+        <div class="alert alert-danger">{{ message }}</div>
+    {% endfor %}
 
-<!-- Liste des catégories -->
-<h2>Liste des Catégories</h2>
-<table class="table table-striped mt-3">
-    <thead>
-        <tr>
-            <th>Nom</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for categorie in categories %}
-            <tr>
-                <td>{{ categorie.name }}</td>
-                <td>
-                    <form action="{{ path('backoffice_categories_delete', {id: categorie.id}) }}" method="POST" style="display:inline-block" onsubmit="return confirm('Confirmer la suppression ?');">
-                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ categorie.id) }}">
-                        {% if categorie.formationsCount > 0 %}
-                            <button type="submit" class="btn btn-danger" disabled>Supprimer</button>
-                        {% else %}
-                            <button type="submit" class="btn btn-danger">Supprimer</button>
-                        {% endif %}
-                    </form>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="2">Aucune catégorie disponible.</td>
-            </tr>
-        {% endfor %}
-    </tbody>
-</table>
+    <div class="card shadow mb-4">
+        <div class="card-header bg-success text-white">
+            <h4 class="mb-0">➕ Ajouter une Catégorie</h4>
+        </div>
+        <div class="card-body">
+            {{ form_start(formCategorie, {'method': 'POST'}) }}
+                <div class="mb-3">
+                    {{ form_label(formCategorie.name) }}
+                    {{ form_widget(formCategorie.name, {'attr': {'class': 'form-control'}}) }}
+                    {{ form_errors(formCategorie.name) }}
+                </div>
+                {{ form_widget(formCategorie.submit) }}
+            {{ form_end(formCategorie) }}
+        </div>
+    </div>
+
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">📋 Liste des Catégories</h4>
+        </div>
+        <div class="card-body">
+            <table class="table table-striped mt-2">
+                <thead>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Formations liées</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for categorie in categories %}
+                        <tr>
+                            <td>{{ categorie.name }}</td>
+                            <td>{{ categorie.formationsCount }}</td>
+                            <td>
+                                <form action="{{ path('backoffice_categories_delete', {id: categorie.id}) }}" method="POST" style="display:inline-block" onsubmit="return confirm('Confirmer la suppression ?');">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ categorie.id) }}">
+                                    {% if categorie.formationsCount > 0 %}
+                                        <button type="submit" class="btn btn-danger btn-sm" disabled>Supprimer</button>
+                                    {% else %}
+                                        <button type="submit" class="btn btn-danger btn-sm">Supprimer</button>
+                                    {% endif %}
+                                </form>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="3">Aucune catégorie disponible.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 {% endblock %}

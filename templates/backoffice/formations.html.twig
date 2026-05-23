@@ -1,27 +1,28 @@
 {% extends "backoffice/baseback.html.twig" %}
 
 {% block body %}
+<div class="container mt-3">
+
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success">{{ message }}</div>
+    {% endfor %}
+    {% for message in app.flashes('error') %}
+        <div class="alert alert-danger">{{ message }}</div>
+    {% endfor %}
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>Gestion des Formations</h2>
+        <a href="{{ path('backoffice_formations_add') }}" class="btn btn-success">➕ Ajouter une formation</a>
+    </div>
+
     <table class="table table-striped">
         <thead>
             <tr>
-                <!-- Colonne Formation -->
                 <th class="text-left align-top" scope="col">
                     Formation
                     <br />
-                    <a href="{{ path('backoffice_formations_index', {
-                        champ:'title',
-                        ordre:'ASC',
-                        playlist: selectedPlaylist,
-                        category: selectedCategory,
-                        title: searchTitle
-                    }) }}" class="btn btn-info btn-sm" role="button"><</a>
-                    <a href="{{ path('backoffice_formations_index', {
-                        champ:'title',
-                        ordre:'DESC',
-                        playlist: selectedPlaylist,
-                        category: selectedCategory,
-                        title: searchTitle
-                    }) }}" class="btn btn-info btn-sm" role="button">></a>
+                    <a href="{{ path('backoffice_formations_index', {champ:'title', ordre:'ASC', playlist: selectedPlaylist, category: selectedCategory, title: searchTitle}) }}" class="btn btn-info btn-sm"><</a>
+                    <a href="{{ path('backoffice_formations_index', {champ:'title', ordre:'DESC', playlist: selectedPlaylist, category: selectedCategory, title: searchTitle}) }}" class="btn btn-info btn-sm">></a>
                     <form class="form-inline mt-1" method="GET" action="{{ path('backoffice_formations_index') }}">
                         <div class="form-group mr-1 mb-2">
                             <input type="text" class="form-control form-control-sm" name="title"
@@ -30,8 +31,6 @@
                         </div>
                     </form>
                 </th>
-
-                <!-- Colonne Playlist -->
                 <th class="text-left align-top" scope="col">
                     Playlist
                     <form class="form-inline mt-1" method="GET" action="{{ path('backoffice_formations_index') }}">
@@ -45,8 +44,6 @@
                         </select>
                     </form>
                 </th>
-
-                <!-- Colonne Catégories -->
                 <th class="text-left align-top" scope="col">
                     Catégories
                     <form class="form-inline mt-1" method="GET" action="{{ path('backoffice_formations_index') }}">
@@ -60,33 +57,14 @@
                         </select>
                     </form>
                 </th>
-
-                <!-- Colonne Date -->
                 <th class="text-center align-top" scope="col">
                     Date
                     <br />
-                    <a href="{{ path('backoffice_formations_index', {
-                        champ:'publishedAt',
-                        ordre:'ASC',
-                        playlist: selectedPlaylist,
-                        category: selectedCategory,
-                        title: searchTitle
-                    }) }}" class="btn btn-info btn-sm" role="button"><</a>
-                    <a href="{{ path('backoffice_formations_index', {
-                        champ:'publishedAt',
-                        ordre:'DESC',
-                        playlist: selectedPlaylist,
-                        category: selectedCategory,
-                        title: searchTitle
-                    }) }}" class="btn btn-info btn-sm" role="button">></a>
+                    <a href="{{ path('backoffice_formations_index', {champ:'publishedAt', ordre:'ASC', playlist: selectedPlaylist, category: selectedCategory, title: searchTitle}) }}" class="btn btn-info btn-sm"><</a>
+                    <a href="{{ path('backoffice_formations_index', {champ:'publishedAt', ordre:'DESC', playlist: selectedPlaylist, category: selectedCategory, title: searchTitle}) }}" class="btn btn-info btn-sm">></a>
                 </th>
-
-                <!-- Colonne Miniature -->
                 <th class="text-center align-top" scope="col">&nbsp;</th>
-                
-                <th class="text-center align-top" scope="col">
-                    Actions
-                </th>
+                <th class="text-center align-top" scope="col">Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -95,17 +73,13 @@
                     <td>
                         <h5 class="text-info">{{ formation.title }}</h5>
                     </td>
-                    <td class="text-left">
-                        {{ formation.playlist.name }}
-                    </td>
+                    <td class="text-left">{{ formation.playlist.name }}</td>
                     <td class="text-left">
                         {% for categorie in formation.categories %}
                             {{ categorie.name }}<br />
                         {% endfor %}
                     </td>
-                    <td class="text-center">
-                        {{ formation.getPublishedAtString() }}
-                    </td>
+                    <td class="text-center">{{ formation.getPublishedAtString() }}</td>
                     <td class="text-center">
                         {% if formation.miniature %}
                             <a href="{{ path('formations.showone', {id: formation.id}) }}">
@@ -114,11 +88,15 @@
                         {% endif %}
                     </td>
                     <td>
-                        <a href="{{ path('backoffice_formations_edit', {id: formation.id}) }}">Modifier</a>
-                        <a href="{{ path('backoffice_formations_delete', {id: formation.id}) }}" onclick="return confirm('Confirmer la suppression ?');">Supprimer</a>
+                        <a href="{{ path('backoffice_formations_edit', {id: formation.id}) }}" class="btn btn-primary btn-sm">Modifier</a>
+                        <form action="{{ path('backoffice_formations_delete', {id: formation.id}) }}" method="POST" style="display:inline-block" onsubmit="return confirm('Confirmer la suppression ?');">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ formation.id) }}">
+                            <button type="submit" class="btn btn-danger btn-sm">Supprimer</button>
+                        </form>
                     </td>
                 </tr>
             {% endfor %}
         </tbody>
     </table>
+</div>
 {% endblock %}

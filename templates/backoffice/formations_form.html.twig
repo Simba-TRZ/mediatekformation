@@ -1,40 +1,70 @@
-{{ form_start(form) }}
+{% extends 'base.html.twig' %}
 
-<div>
-    <div class="row">
-        <div class="col">
-            {{ form_row(form.title) }}
-        </div>
-        <div class="col">
-            {{ form_row(form.description) }}
-        </div>
-        <div class="col">
-            {{ form_row(form.publishedAt) }}
-        </div>
-    </div>
+{% block title %}Modifier une formation{% endblock %}
 
-    <div class="row" style="margin-top: 1rem">
-        <div class="col">
-            {{ form_row(form.videoId) }}
-        </div>
-        <div class="col">
-            {{ form_row(form.categories) }}
-        </div>
-        <div class="col">
-            {{ form_row(form.playlist) }}
+{% block body %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">✏️ Modifier la formation</h4>
+                </div>
+                <div class="card-body">
+
+                    {% for message in app.flashes('success') %}
+                        <div class="alert alert-success">{{ message }}</div>
+                    {% endfor %}
+                    {% for message in app.flashes('error') %}
+                        <div class="alert alert-danger">{{ message }}</div>
+                    {% endfor %}
+
+                    {{ form_start(form) }}
+
+                    <div class="mb-3">
+                        {{ form_label(form.title) }}
+                        {{ form_widget(form.title) }}
+                        {{ form_errors(form.title) }}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(form.description) }}
+                        {{ form_widget(form.description) }}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(form.publishedAt) }}
+                        {{ form_widget(form.publishedAt) }}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(form.videoId) }}
+                        {{ form_widget(form.videoId) }}
+                        {{ form_errors(form.videoId) }}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(form.categories) }}
+                        {{ form_widget(form.categories) }}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(form.playlist) }}
+                        {{ form_widget(form.playlist) }}
+                    </div>
+
+                    <div class="d-flex gap-3 mt-4">
+                        {{ form_widget(form.submit) }}
+                        <a href="{{ path('backoffice_formations_index') }}" class="btn btn-secondary">
+                            Annuler
+                        </a>
+                    </div>
+
+                    {{ form_end(form) }}
+
+                </div>
+            </div>
         </div>
     </div>
 </div>
-
-<div>
-    <div class="align-content-center justify-content-center" style="display: flex; margin-top: 1rem;">
-        {{ form_row(form.submit) }}
-        <div class="mb-3" style="padding-left: 5rem">
-            <a href="{{ path('backoffice_formations_index') }}" class="btn btn-secondary">
-                Annuler
-            </a>
-        </div>
-    </div>
-</div>
-
-{{ form_end(form) }}
+{% endblock %}
